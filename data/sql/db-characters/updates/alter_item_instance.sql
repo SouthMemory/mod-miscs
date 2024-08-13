@@ -14,6 +14,12 @@ BEGIN
         ALTER TABLE `item_instance` ADD COLUMN `stats` text NOT NULL;
     END IF;
 
+    -- 检查并添加 armor 列
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                   WHERE TABLE_NAME='item_instance' AND COLUMN_NAME='armor') THEN
+        ALTER TABLE `item_instance` ADD COLUMN `armor` int(10) unsigned NOT NULL DEFAULT '0';
+    END IF;
+
     -- 检查并添加 damages 列
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
                    WHERE TABLE_NAME='item_instance' AND COLUMN_NAME='damages') THEN
