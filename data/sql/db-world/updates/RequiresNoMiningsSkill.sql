@@ -1,99 +1,48 @@
-START TRANSACTION;
+-- START TRANSACTION;
 
-DROP TABLE IF EXISTS `lock`;
+-- DROP TABLE IF EXISTS `lock`;
 
-CREATE TABLE `lock` (
-  `ID` int unsigned NOT NULL DEFAULT '0',
-  `type1` int unsigned NOT NULL DEFAULT '0',
-  `type2` int unsigned NOT NULL DEFAULT '0',
-  `type3` int unsigned NOT NULL DEFAULT '0',
-  `type4` int unsigned NOT NULL DEFAULT '0',
-  `type5` int unsigned NOT NULL DEFAULT '0',
-  `type6` int unsigned NOT NULL DEFAULT '0',
-  `type7` int unsigned NOT NULL DEFAULT '0',
-  `type8` int unsigned NOT NULL DEFAULT '0',
-  `index1` int unsigned NOT NULL DEFAULT '0',
-  `index2` int unsigned NOT NULL DEFAULT '0',
-  `index3` int unsigned NOT NULL DEFAULT '0',
-  `index4` int unsigned NOT NULL DEFAULT '0',
-  `index5` int unsigned NOT NULL DEFAULT '0',
-  `index6` int unsigned NOT NULL DEFAULT '0',
-  `index7` int unsigned NOT NULL DEFAULT '0',
-  `index8` int unsigned NOT NULL DEFAULT '0',
-  `skill1` int unsigned NOT NULL DEFAULT '0',
-  `skill2` int unsigned NOT NULL DEFAULT '0',
-  `skill3` int unsigned NOT NULL DEFAULT '0',
-  `skill4` int unsigned NOT NULL DEFAULT '0',
-  `skill5` int unsigned NOT NULL DEFAULT '0',
-  `skill6` int unsigned NOT NULL DEFAULT '0',
-  `skill7` int unsigned NOT NULL DEFAULT '0',
-  `skill8` int unsigned NOT NULL DEFAULT '0',
-  `action1` int unsigned NOT NULL DEFAULT '0',
-  `action2` int unsigned NOT NULL DEFAULT '0',
-  `action3` int unsigned NOT NULL DEFAULT '0',
-  `action4` int unsigned NOT NULL DEFAULT '0',
-  `action5` int unsigned NOT NULL DEFAULT '0',
-  `action6` int unsigned NOT NULL DEFAULT '0',
-  `action7` int unsigned NOT NULL DEFAULT '0',
-  `action8` int unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
+-- CREATE TABLE `lock` (
+--   `ID` int unsigned NOT NULL DEFAULT '0',
+--   `type1` int unsigned NOT NULL DEFAULT '0',
+--   `type2` int unsigned NOT NULL DEFAULT '0',
+--   `type3` int unsigned NOT NULL DEFAULT '0',
+--   `type4` int unsigned NOT NULL DEFAULT '0',
+--   `type5` int unsigned NOT NULL DEFAULT '0',
+--   `type6` int unsigned NOT NULL DEFAULT '0',
+--   `type7` int unsigned NOT NULL DEFAULT '0',
+--   `type8` int unsigned NOT NULL DEFAULT '0',
+--   `index1` int unsigned NOT NULL DEFAULT '0',
+--   `index2` int unsigned NOT NULL DEFAULT '0',
+--   `index3` int unsigned NOT NULL DEFAULT '0',
+--   `index4` int unsigned NOT NULL DEFAULT '0',
+--   `index5` int unsigned NOT NULL DEFAULT '0',
+--   `index6` int unsigned NOT NULL DEFAULT '0',
+--   `index7` int unsigned NOT NULL DEFAULT '0',
+--   `index8` int unsigned NOT NULL DEFAULT '0',
+--   `skill1` int unsigned NOT NULL DEFAULT '0',
+--   `skill2` int unsigned NOT NULL DEFAULT '0',
+--   `skill3` int unsigned NOT NULL DEFAULT '0',
+--   `skill4` int unsigned NOT NULL DEFAULT '0',
+--   `skill5` int unsigned NOT NULL DEFAULT '0',
+--   `skill6` int unsigned NOT NULL DEFAULT '0',
+--   `skill7` int unsigned NOT NULL DEFAULT '0',
+--   `skill8` int unsigned NOT NULL DEFAULT '0',
+--   `action1` int unsigned NOT NULL DEFAULT '0',
+--   `action2` int unsigned NOT NULL DEFAULT '0',
+--   `action3` int unsigned NOT NULL DEFAULT '0',
+--   `action4` int unsigned NOT NULL DEFAULT '0',
+--   `action5` int unsigned NOT NULL DEFAULT '0',
+--   `action6` int unsigned NOT NULL DEFAULT '0',
+--   `action7` int unsigned NOT NULL DEFAULT '0',
+--   `action8` int unsigned NOT NULL DEFAULT '0',
+--   PRIMARY KEY (`ID`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
 
--- 查询并更新
-UPDATE `lock` l
-JOIN gameobject_template g ON g.Data0 = l.ID
-SET l.skill1 = 0
-WHERE g.entry IN (
-    1731,
-    2055,
-    3763,
-    103713,
-    181248,
-    1732,
-    2054,
-    3764,
-    103711,
-    181249,
-    73940,
-    1733,
-    105569,
-    1735,
-    181109,
-    1734,
-    150080,
-    73941,
-    2040,
-    150079,
-    176645,
-    123310,
-    123309,
-    181108,
-    2047,
-    150081,
-    123848,
-    324,
-    150082,
-    176643,
-    175404,
-    180215,
-    177388,
-    181555,
-    181556,
-    181569,
-    181570,
-    189978,
-    189979,
-    181557,
-    189980,
-    189981,
-    195036,
-    191133
-);
-
--- -- 查询更新后的结果
--- SELECT DISTINCT l.*
--- FROM `lock` l
+-- -- 查询并更新
+-- UPDATE `lock` l
 -- JOIN gameobject_template g ON g.Data0 = l.ID
+-- SET l.skill1 = 0
 -- WHERE g.entry IN (
 --     1731,
 --     2055,
@@ -141,4 +90,55 @@ WHERE g.entry IN (
 --     191133
 -- );
 
-COMMIT;
+-- -- -- 查询更新后的结果
+-- -- SELECT DISTINCT l.*
+-- -- FROM `lock` l
+-- -- JOIN gameobject_template g ON g.Data0 = l.ID
+-- -- WHERE g.entry IN (
+-- --     1731,
+-- --     2055,
+-- --     3763,
+-- --     103713,
+-- --     181248,
+-- --     1732,
+-- --     2054,
+-- --     3764,
+-- --     103711,
+-- --     181249,
+-- --     73940,
+-- --     1733,
+-- --     105569,
+-- --     1735,
+-- --     181109,
+-- --     1734,
+-- --     150080,
+-- --     73941,
+-- --     2040,
+-- --     150079,
+-- --     176645,
+-- --     123310,
+-- --     123309,
+-- --     181108,
+-- --     2047,
+-- --     150081,
+-- --     123848,
+-- --     324,
+-- --     150082,
+-- --     176643,
+-- --     175404,
+-- --     180215,
+-- --     177388,
+-- --     181555,
+-- --     181556,
+-- --     181569,
+-- --     181570,
+-- --     189978,
+-- --     189979,
+-- --     181557,
+-- --     189980,
+-- --     189981,
+-- --     195036,
+-- --     191133
+-- -- );
+
+-- COMMIT;
