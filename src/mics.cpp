@@ -320,41 +320,97 @@ private:
 
 };
 
-
 // 新功能：当玩家收到伤害时，如果在骑行或者飞行状态，则推出该状态
 class PlayerDismountOnDamageScript : public PlayerScript
 {
 public:
+    // 构造函数，初始化脚本名称
     PlayerDismountOnDamageScript() : PlayerScript("PlayerDismountOnDamageScript") { }
 
+    // 当玩家登录时触发，简单发送一条消息给玩家
     void OnLogin(Player* player) override
     {
         ChatHandler(player->GetSession()).PSendSysMessage("Hello from PlayerDismountOnDamageScript");
     }
 
+    // 结构体用于存储每次伤害的数值和时间戳
+    struct DamageRecord
+    {
+        uint32 damage;    // 记录伤害值
+        uint32 timestamp; // 记录伤害发生的时间（毫秒）
+    };
+
+    // 使用unordered_map来记录每个玩家的伤害历史记录，key是玩家的GUID
+    // deque用于高效的在头部删除过期的伤害记录
+    std::unordered_map<ObjectGuid, std::deque<DamageRecord>> playerDamageRecords;
+
+    // 玩家受到伤害时调用
     void OnPlayerTakeDamage(Player* player, uint32 damage) override
     {
-        if (player->IsMounted() || player->IsInFlight())
+        // 如果玩家不在骑乘或飞行状态，或伤害值为0，则不处理
+        if (!(player->IsMounted() || player->IsInFlight()) || damage == 0)
+            return;
+
+        uint32 currentTime = getMSTime();          // 获取当前时间（毫秒）
+        ObjectGuid playerGuid = player->GetGUID(); // 获取玩家的GUID，作为映射的键值
+
+        // 获取或初始化该玩家的伤害记录列表
+        std::deque<DamageRecord>& damageList = playerDamageRecords[playerGuid];
+
+        // 添加当前伤害记录到列表，记录伤害值和时间戳
+        damageList.push_back({ damage, currentTime });
+
+        // 清理超过3秒的伤害记录，移除时间戳早于3秒前的记录
+        uint32 threeSecondsAgo = currentTime - 3000;
+        while (!damageList.empty() && damageList.front().timestamp < threeSecondsAgo)
         {
-            // 确保玩家的移动状态正确更新
-            player->SetCanFly(false);
-            player->m_movementInfo.RemoveMovementFlag(MOVEMENTFLAG_HOVER | MOVEMENTFLAG_CAN_FLY);
-            player->SetDisableGravity(false);
-            
-            // 移除与骑乘相关的增益效果
+            damageList.pop_front(); // 从deque头部移除旧记录
+        }
+
+        // 计算3秒内的累计伤害
+        uint32 totalDamage = 0;
+        for (const auto& record : damageList)
+        {
+            totalDamage += record.damage; // 累加伤害
+        }
+
+        // 计算玩家最大生命值的5%作为伤害阈值
+        uint32 damageThreshold = player->GetMaxHealth() / 20;
+
+        // 如果3秒内的累计伤害超过玩家最大生命值的5%，或者3秒内的受伤次数超过5次
+        if (totalDamage >= damageThreshold || damageList.size() > 5)
+        {
+            // 如果玩家具有飞行或悬停的移动标志，移除飞行能力和悬停标志
+            if (player->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_CAN_FLY) || player->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_HOVER))
+            {
+                player->SetCanFly(false); // 禁止玩家飞行
+                player->m_movementInfo.RemoveMovementFlag(MOVEMENTFLAG_HOVER | MOVEMENTFLAG_CAN_FLY);
+                player->SetDisableGravity(false); // 启用重力
+            }
+
+            // 移除骑乘增益效果（如果存在）
             player->RemoveAurasByType(SPELL_AURA_MOUNTED);
-            
-            // 取消骑乘
+
+            // 取消骑乘状态
             player->Dismount();
-            
+
             // 停止玩家移动
             player->StopMoving();
+
+            // 清空该玩家的伤害记录列表，因为已经触发了取消骑乘逻辑
+            damageList.clear();
         }
     }
+
+    // 当玩家登出时触发，清理玩家的伤害记录，防止内存泄漏
+    void OnLogout(Player* player) override
+    {
+        // 使用erase方法从map中删除该玩家的记录
+        // 注：即使player->GetGUID()不在map中，调用erase也不会导致错误
+        // 如果键不存在，erase会返回0，不执行任何操作
+        playerDamageRecords.erase(player->GetGUID());
+    }
 };
-
-
-
 
 // Add all scripts in one
 void AddMiscScripts()
