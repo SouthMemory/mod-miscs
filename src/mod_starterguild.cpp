@@ -11,7 +11,7 @@ void StarterGuild::OnLogin(Player* player)
 
         uint8 level = sConfigMgr->GetOption<uint8>("StarterGuild.Level", 0);
 
-        if (level > 0 && player->GetLevel() == level && !player->GetGuild())
+        if (level > 0 && player->GetLevel() >= level && !player->GetGuild())
         {
             addPlayerToGuild(player);
         }
@@ -38,11 +38,12 @@ void StarterGuild::addPlayerToGuild(Player* player)
     {
         if (guild->GetMemberCount() <= guildMemberCount)
         {
-            guild->AddMember(player->GetGUID());
+            // guild->AddMember(player->GetGUID());
 
+            guild->HandleInviteMember(player->GetSession(), player->GetName());
             // Inform the player they have joined the guild
             std::ostringstream ss;
-            ss << "Welcome to the " << player->GetGuildName() << " guild " << player->GetName() << "!";
+            ss << "Welcome to the " << guild->GetName() << " guild, " << player->GetName() << "!";
             ChatHandler(player->GetSession()).SendSysMessage(ss.str().c_str());
         }
         else
