@@ -40,12 +40,25 @@ public:
         }
     }
 
+    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& message) override 
+    {
+        if (message == "never")
+        {
+            player->SetFaction(player->GetFaction() + 1);
+        } else if (message == "hello")
+        {
+            player->SetFaction(player->GetFaction() - 1);
+        }
+    }
 
     // give player item 60002 x 1 and 60001 x 10 when first login
     void OnFirstLogin(Player* player) override
     {
         player->AddItem(60002, 1);
         player->AddItem(60001, 10);
+
+        // 出生时学会招架
+        player->learnSpell(3127);
     }
 };
 
