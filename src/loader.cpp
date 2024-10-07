@@ -4,6 +4,7 @@
 
 // From SC
 void AddMiscScripts();
+void AddStarterGuildScripts();
 
 // Add all
 // cf. the naming convention https://github.com/azerothcore/azerothcore-wotlk/blob/master/doc/changelog/master.md#how-to-upgrade-4
@@ -11,5 +12,6 @@ void AddMiscScripts();
 void Addmod_miscsScripts()
 {
     AddMiscScripts();
+    AddStarterGuildScripts();
 }
 
