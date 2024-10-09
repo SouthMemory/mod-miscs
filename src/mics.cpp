@@ -37,6 +37,11 @@ public:
         if (sConfigMgr->GetOption<bool>("MyModule.Enable", false))
         {
             ChatHandler(player->GetSession()).PSendSysMessage("Hello from module SpellLearningScript");
+            if (player->GetRealParry() == 0)
+            {
+                player->learnSpell(3127);
+                // player->CanParry()
+            }
         }
     }
 
@@ -274,7 +279,7 @@ public:
         {
             // 发放勋章给玩家
             player->AddItem(60001, medalsToGive);
-            ChatHandler(player->GetSession()).PSendSysMessage("You have received %u Combat Medal(s)!", medalsToGive);
+            // ChatHandler(player->GetSession()).PSendSysMessage("You have received %u Combat Medal(s)!", medalsToGive);
         }
     }
 

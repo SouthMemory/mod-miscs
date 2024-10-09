@@ -38,9 +38,11 @@ void StarterGuild::addPlayerToGuild(Player* player)
     {
         if (guild->GetMemberCount() <= guildMemberCount)
         {
-            // guild->AddMember(player->GetGUID());
-
-            guild->HandleInviteMember(player->GetSession(), player->GetName());
+            if (player->IsReal()){
+                guild->HandleInviteMember(player->GetSession(), player->GetName());
+            } else {
+                guild->AddMember(player->GetGUID());
+            }
             // Inform the player they have joined the guild
             std::ostringstream ss;
             ss << "Welcome to the " << guild->GetName() << " guild, " << player->GetName() << "!";
