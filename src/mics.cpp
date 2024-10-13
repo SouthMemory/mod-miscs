@@ -76,69 +76,6 @@ public:
 //     uint32 GetGameObjectEntry(ObjectGuid::LowType /*guidlow*/, uint32 entry) { return entry; }
 // };
 
-// 记录GameObjectUpdate的信息
-class GameObjectUpdateScript : public GameObjectScript
-{
-public:
-    GameObjectUpdateScript() : GameObjectScript("GameObjectUpdateScript") { }
-
-    void OnGameObjectDestroyed(GameObject* go, Player* player) {
-        LOG_ERROR("GameObjectUpdateScript", "A");
-        if (player)
-            ChatHandler(player->GetSession()).PSendSysMessage("GameObject destroyed: %s", go->GetName().c_str());
-    }
-
-    void OnGameObjectDamaged(GameObject* go, Player* player) {
-        LOG_ERROR("GameObjectUpdateScript", "B");
-        if (player)
-            ChatHandler(player->GetSession()).PSendSysMessage("GameObject damaged: %s", go->GetName().c_str());
-    }
-
-    void OnGameObjectLootStateChanged(GameObject* go, uint32 state, Unit* unit) {
-        LOG_ERROR("GameObjectUpdateScript", "C");
-        if (Player* player = unit->ToPlayer())
-            ChatHandler(player->GetSession()).PSendSysMessage("GameObject loot state changed: %s", go->GetName().c_str());
-    }
-
-    void OnGameObjectStateChanged(GameObject* go, uint32 state) {
-        LOG_ERROR("GameObjectUpdateScript", "D");
-        BroadcastToPlayers(go, "GameObject state changed: %s", go->GetName().c_str());
-    }
-
-    void OnGameObjectUpdate(GameObject* go, uint32 diff) {
-        LOG_ERROR("GameObjectUpdateScript", "E");
-        BroadcastToPlayers(go, "GameObject updated: %s", go->GetName().c_str());
-    }
-
-    void OnGameObjectAddWorld(GameObject* go) {
-        LOG_ERROR("GameObjectUpdateScript", "F");
-        BroadcastToPlayers(go, "GameObject added to world: %s", go->GetName().c_str());
-    }
-
-    void OnGameObjectRemoveWorld(GameObject* go) {
-        LOG_ERROR("GameObjectUpdateScript", "G");
-        BroadcastToPlayers(go, "GameObject removed from world: %s", go->GetName().c_str());
-    }
-
-private:
-    void BroadcastToPlayers(GameObject* go, const char* format, ...) {
-        va_list args;
-        va_start(args, format);
-
-        // 遍历当前地图上的所有玩家并发送消息
-        Map::PlayerList const& players = go->GetMap()->GetPlayers();
-        for (auto const& playerPair : players) {
-            if (Player* player = playerPair.GetSource()) {
-                va_list argsCopy;
-                va_copy(argsCopy, args);
-                ChatHandler(player->GetSession()).PSendSysMessage(format, argsCopy);
-                va_end(argsCopy);
-            }
-        }
-
-        va_end(args);
-    }
-};
 
 class UpdateGameObjectIDScript : public DatabaseScript
 {
@@ -434,7 +371,6 @@ public:
 void AddMiscScripts()
 {
     new SpellLearningScript();
-    // new GameObjectUpdateScript();
     new UpdateGameObjectIDScript();
     new CustomQuestRewardScript();
     new PlayerDismountOnDamageScript();
