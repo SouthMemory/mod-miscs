@@ -1,0 +1,1 @@
+UPDATE `spell_bonus_data` SET `ap_bonus` = 0.1 WHERE `comments` = 'Warrior - Revenge';
