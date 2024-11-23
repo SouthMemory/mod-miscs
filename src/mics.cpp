@@ -159,7 +159,8 @@ public:
         {
             if (IsMineralVein(gameObjectData.id))
             {
-                gameObjectData.id = vein_pools[distrib(gen)];
+                if (urand(1,100) <= 35)
+                    gameObjectData.id = vein_pools[distrib(gen)];
                 // LOG_DEBUG("entities.unit.rsai", "Updated MineralVein id for guid {} to {} '{}'", guidlow, gameObjectData.id, sObjectMgr->GetGameObjectTemplate(gameObjectData.id)->name);
             }
         }
@@ -171,7 +172,8 @@ public:
         {
             if (IsHerbLism(gameObjectData.id))
             {
-                gameObjectData.id = herb_pools[distrib(gen)];
+                if (urand(1,100) <= 35)
+                    gameObjectData.id = herb_pools[distrib(gen)];
                 // LOG_DEBUG("entities.unit.rsai", "Updated HerbLism id for guid {} to {} '{}'", guidlow, gameObjectData.id, sObjectMgr->GetGameObjectTemplate(gameObjectData.id)->name);
             }
         }
