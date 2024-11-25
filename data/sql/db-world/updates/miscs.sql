@@ -1,0 +1,1 @@
+REPLACE INTO `acore_world`.`spell_script_names` (`spell_id`, `ScriptName`) VALUES (80977, 'spell_very_stable_transport');
